@@ -26,3 +26,10 @@ cd ../unit_07_ls_sol
 git pull
 cd -
 
+
+echo ""
+echo "Updating Lab 1"
+echo "Currently in: `pwd`"
+cd ../lab-1-teame_ddc
+git pull
+cd -
