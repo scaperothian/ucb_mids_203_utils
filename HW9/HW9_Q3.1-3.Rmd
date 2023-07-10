@@ -1,0 +1,70 @@
+---
+title: "HW9"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## install the package if it's not installed
+## note: need to install libgit2-dev in terminal
+##      >> apt-get update
+##      >> apt-get install libgit2-dev
+install.packages("remotes")
+remotes::install_github("baumer-lab/fec16",force=TRUE)
+# then select 1 for all updates
+library(fec16)
+
+library(ggplot2)
+library(magrittr)
+install.packages("gridExtra")
+library(gridExtra)
+
+install.packages('dplyr')
+library(dplyr)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Q3.1 - Exploring - Make Histograms
+
+```{r}
+percent_hist <- data.frame(z=results_house$general_percent)
+h1 <- percent_hist %>%  
+  ggplot() + 
+  aes(z) +
+  geom_histogram(fill = "red", color = "white", bins = 50) +
+  ggtitle("Histogram of Q3.1 Exploring Votes")+
+  labs(x = "Percentage of Votes by Campaign", y="Count")
+
+ttl <- data.frame(z=campaigns$ttl_disb)
+h2 <- ttl %>%  
+  ggplot() + 
+  aes(z) +
+  geom_histogram(fill = "red", color = "white", bins = 50) +
+  ggtitle("Histogram of Q3.1 Exploring Spending")+
+  labs(x = "Spending By Campaign($)", y="Count")+  
+  scale_x_continuous(limits = c(0,100e3))+
+  scale_y_continuous(limits = c(0,100))
+
+combined_plots <- grid.arrange(h1, h2, ncol = 2)
+#rm(h1,h2,combined_plots)
+```
+
+first, roughly symmetric. second, right skew
+
+### Q3.2 Exploring - Build a Data Frame pt 1
+
+Create a new dataframe by joining `results_house` and `campaigns` using the `inner_join` function from `dplyr` on the field `cand_id`.
+
+### Q3.3 Exploring - Build a Data Frame pt 2
+
+Create a new dataframe by joining `results_house` and `campaigns` using the `inner_join` function from `dplyr` on the field `cand_id`.
+
+```{r}
+
+# Inner join based on the "test" column
+result <- inner_join(results_house, campaigns, by = "cand_id")
+
+# Print the result
+dim(result)
+
+```
