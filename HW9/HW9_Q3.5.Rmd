@@ -1,0 +1,75 @@
+---
+title: "HW9"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+## install the package if it's not installed
+## note: need to install libgit2-dev in terminal
+##      >> apt-get update
+##      >> apt-get install libgit2-dev
+install.packages("remotes")
+remotes::install_github("baumer-lab/fec16",force=TRUE)
+# then select 1 for all updates
+library(fec16)
+
+library(ggplot2)
+library(magrittr)
+install.packages("gridExtra")
+library(gridExtra)
+
+install.packages('dplyr')
+library(dplyr)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+result$candidate_party <- result$party
+mask <- !(result$candidate_party=='REP' | result$candidate_party=='DEM')
+result$candidate_party[mask] <- "OTHER"
+
+unique(result$candidate_party)
+```
+
+```{r}
+
+result %>%  
+  ggplot() + 
+  aes(x = ttl_disb, y = general_votes, color=candidate_party) +
+  geom_point(stat = "identity") +
+  ggtitle("Scatter Plot of\nCampaign Contributions vs. Votes in the House\n")+
+  labs(x = "Campaign Contributions ($)", y="House Votes")+
+  scale_y_continuous(labels = scales::comma)+
+  scale_x_continuous(labels = scales::comma)+
+  theme(plot.title = element_text(hjust = 0.5))+
+  labs(color = "Party")
+
+```
+
+```{r}
+
+model <- lm(general_votes ~ ttl_disb + candidate_party,data=result)
+summary(model)
+```
+
+### Q3.5 Regression - Evaluate large sample assumptions
+
+*Evaluate the large-sample linear model assumptions presenting evidence based on your background knowledge, visualizations, and numerical summaries. Please limit your answer for this subpart evaluating both assumptions to no more than a page in total. Written responses should be no longer than 5 sentences for each assumption.*
+
+**Linearity**: Looking at the scatter plot above, the relationship appears to roughly have a positive linear relationship for REPUBLICAN and DEMOCRAT, however, the slopes by categories do appear different. The OTHER category has a much lower slope (potentially negative) for a large cluster of samples.
+
+**Independence**: The residuals have clustered outcomes. So regression appears to have independ
+
+```{r}
+plt2 <- model %>%  
+  ggplot() + 
+  aes(y = model$residuals, x = model$fitted.values)+
+  geom_point(stat = "identity") +
+  ggtitle("Scatter Plot of\nCampaign Contributions vs. Votes in the House\n")+
+  labs(x = "House Votes", y="Residuals") +
+  scale_y_continuous(labels = scales::comma)+
+  scale_x_continuous(labels = scales::comma)
+plt2
+```
