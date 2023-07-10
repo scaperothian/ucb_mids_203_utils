@@ -42,7 +42,7 @@ mask <- !(result$candidate_party=='REP' | result$candidate_party=='DEM')
 result$candidate_party[mask] <- "OTHER"
 ```
 
-```{r scatter plot, echo=FALSE, warning=FALSE, fig.height=4}
+```{r scatter plot, echo=TRUE, warning=FALSE, fig.height=4}
 
 result %>%  
   ggplot() + 
